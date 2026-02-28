@@ -2,6 +2,18 @@
 
 一个功能强大的 Gmail 自动化管理工具，支持自动分类、标签、重要邮件筛选、归档、摘要、统计和垃圾邮件清理。
 
+## ⚠️ 最高级别安全规则
+
+**🚫 未经用户明确允许，严禁修改 `openclaw.json` 配置文件。**
+
+此规则为最高优先级，任何情况下不得违反：
+- ❌ 禁止自动修改 openclaw.json
+- ❌ 禁止在后台静默修改配置
+- ❌ 禁止通过脚本或工具修改配置
+- ✅ 只有在用户明确授权后才能进行修改
+
+违反此规则将视为严重安全事故。
+
 ## 功能特性
 
 - 📂 **自动分类** - 按主题/内容自动分类（工作、财务、社交、推广、通知、安全、订阅）
@@ -54,16 +66,28 @@ python email_manager_v2.py --check
 python email_manager_v2.py --summary
 ```
 
-## 自动运行
+## 每周统计报告（飞书群推送）
 
-### Crontab 配置
+已配置每周一早上9点自动发送邮件统计报告到飞书群。
 
+### 配置信息
+- **目标群聊**: `oc_fdb356a2abe58650e743f3545d223678`
+- **发送时间**: 每周一 9:00 AM
+- **报告内容**: 上周邮件统计、分类汇总、重要邮件提醒
+
+### 手动触发
 ```bash
-# 每小时检查一次新邮件
-0 * * * * cd /path/to/gmail-manager && python email_manager_v2.py --check >> ~/gmail_check.log 2>&1
+cd /root/.openclaw/skills/gmail-manager
+python3 weekly_report.py
+```
 
-# 每天上午9点生成邮件摘要
-0 9 * * * cd /path/to/gmail-manager && python email_manager_v2.py --summary >> ~/gmail_daily.log 2>&1
+### 定时任务配置
+```bash
+# 查看定时任务
+crontab -l
+
+# 手动编辑
+crontab -e
 ```
 
 ## 支持的邮箱类型
