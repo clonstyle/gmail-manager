@@ -365,20 +365,30 @@ class EmailManager:
     
     def _load_accounts(self):
         """加载已保存的账户"""
+        # 加载密码映射
+        credentials = {}
+        cred_file = os.path.join(CONFIG_DIR, 'credentials.json')
+        if os.path.exists(cred_file):
+            with open(cred_file, 'r') as f:
+                credentials = json.load(f)
+        
         if os.path.exists(ACCOUNTS_FILE):
             with open(ACCOUNTS_FILE, 'r') as f:
                 accounts_data = json.load(f)
                 for acc_data in accounts_data:
+                    email = acc_data['email']
+                    password = credentials.get(email, acc_data.get('password', ''))
+                    
                     if acc_data['type'] == 'gmail':
                         account = GmailAccount(
                             acc_data['name'],
-                            acc_data['email']
+                            email
                         )
                     elif acc_data['type'] == 'imap':
                         account = IMAPAccount(
                             acc_data['name'],
-                            acc_data['email'],
-                            acc_data.get('password', ''),
+                            email,
+                            password,
                             acc_data['imap_server'],
                             acc_data.get('imap_port', 993)
                         )
