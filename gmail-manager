@@ -1,0 +1,73 @@
+#!/bin/bash
+# Gmail Manager - OpenClaw Skill CLI 包装脚本
+# 路径: /root/.openclaw/skills/gmail-manager/gmail-manager
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PYTHON_SCRIPT="$SCRIPT_DIR/email_manager_v2.py"
+
+# 帮助信息
+show_help() {
+    cat << EOF
+Gmail Manager - 智能邮件管理工具
+
+用法: gmail-manager <命令> [选项]
+
+命令:
+  check, c         检查所有邮箱的新邮件
+  summary, s       生成邮件摘要报告
+  clean            清理垃圾邮件
+  report, r        生成完整统计报告
+  setup-account    添加邮箱账户
+  setup-feishu     配置飞书通知
+  help, -h         显示帮助信息
+
+示例:
+  gmail-manager check              # 检查新邮件
+  gmail-manager summary            # 生成摘要
+  gmail-manager setup-account      # 添加邮箱账户
+
+EOF
+}
+
+# 检查 Python 脚本是否存在
+if [[ ! -f "$PYTHON_SCRIPT" ]]; then
+    echo "错误: 找不到主程序 $PYTHON_SCRIPT"
+    exit 1
+fi
+
+# 解析命令
+case "${1:-}" in
+    check|c)
+        python "$PYTHON_SCRIPT" --check
+        ;;
+    summary|s)
+        python "$PYTHON_SCRIPT" --summary
+        ;;
+    clean)
+        python "$PYTHON_SCRIPT" --clean
+        ;;
+    report|r)
+        python "$PYTHON_SCRIPT" --summary --stats
+        ;;
+    setup-account)
+        python "$PYTHON_SCRIPT" --setup-account
+        ;;
+    setup-feishu)
+        python "$PYTHON_SCRIPT" --setup-feishu
+        ;;
+    help|-h|--help)
+        show_help
+        ;;
+    "")
+        echo "错误: 缺少命令"
+        show_help
+        exit 1
+        ;;
+    *)
+        echo "错误: 未知命令 '$1'"
+        show_help
+        exit 1
+        ;;
+esac

@@ -454,7 +454,7 @@ class EmailManager:
         for account in self.accounts:
             print(f"🔍 检查 {account.name} ({account.email_address})...")
             
-            emails = account.get_emails(max_results=20)
+            emails = account.get_emails(limit=20)
             print(f"   找到 {len(emails)} 封邮件")
             
             # 分类和标记
