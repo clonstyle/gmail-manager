@@ -28,6 +28,11 @@ client_secret.json
 token.pickle
 *.credentials
 
+# 邮箱账户配置（包含密码）
+credentials.json
+accounts.json
+feishu_config.json
+
 # IDE
 .vscode/
 .idea/
